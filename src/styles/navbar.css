@@ -1,0 +1,26 @@
+.navbar_container {
+  color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: black;
+  opacity: 0.7;
+}
+h3 {
+  padding: 10px;
+}
+.navs {
+  padding: 10px;
+}
+.navs a {
+  color: rgb(255, 245, 245);
+  padding-left: 20px;
+  padding-right: 20px;
+  text-decoration: none;
+}
+.navs a:hover {
+  color: rgb(109, 121, 233);
+}
+.buttons {
+  margin: 10px;
+}

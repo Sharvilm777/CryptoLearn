@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import Coins from "./Components/Coins";
+import Navbar from "./Components/Navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./Components/Home";
+import Coin from "./Components/Coin";
+import News from "./Components/News";
+import Portfolio from "./Components/Portfolio";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+const theme = createTheme({
+  typography: {
+    fontFamily: ["Quicksand"],
+  },
+});
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/coins" element={<Coins />} />
+            <Route path="/coinById/:uuid" element={<Coin />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+          </Routes>
+        </ThemeProvider>
+      </Router>
     </div>
   );
 }
