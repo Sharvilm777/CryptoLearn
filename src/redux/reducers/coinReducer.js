@@ -3,6 +3,8 @@ const coinState = {
 };
 export const coinReducer = (state = coinState, action) => {
   switch (action.type) {
+    case "SETCOINS":
+      return { ...state, coins: action.payload };
     case "AFTER_BUY": {
       let avaliable = false;
       const newArr = [...state.coins];
@@ -23,8 +25,8 @@ export const coinReducer = (state = coinState, action) => {
       let newArr = [...state.coins];
       newArr.map((coin) => {
         if (coin.id === action.payload.id) {
-          if (coin.AmountOfCoins > action.payload.AmountOfCoins) {
-            coin.AmountOfCoins -= action.payload.AmountOfCoins;
+          if (coin.amountOfCoins > action.payload.amountOfCoins) {
+            coin.amountOfCoins -= action.payload.amountOfCoins;
             coin.orderAmount -= action.payload.orderAmount;
             coin.sellingPrice = action.payload.sellingPrice;
             avaliable = true;

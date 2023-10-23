@@ -7,6 +7,8 @@ import Coin from "./Components/Coin";
 import News from "./Components/News";
 import Portfolio from "./Components/Portfolio";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Login from "./Components/Login";
+import SignUp from "./Components/SignUp";
 const theme = createTheme({
   typography: {
     fontFamily: ["Quicksand"],
@@ -24,6 +26,8 @@ function App() {
             <Route path="/coinById/:uuid" element={<Coin />} />
             <Route path="/news" element={<News />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
           </Routes>
         </ThemeProvider>
       </Router>

@@ -34,8 +34,8 @@ let useStyle = makeStyles((theme) => ({
 }));
 const PortfolioCards = ({ coin, updatebtn }) => {
   const [newArr, setnewArr] = useState({});
-  let current = newArr.price * coin.AmountOfCoins;
-  let Invested = coin.buyingPrice * coin.AmountOfCoins;
+  let current = newArr.price * coin.amountOfCoins;
+  let Invested = coin.buyingPrice * coin.amountOfCoins;
   let valueNow = current - Invested;
   let optionsForById = {
     params: {
@@ -47,9 +47,9 @@ const PortfolioCards = ({ coin, updatebtn }) => {
       "x-rapidapi-key": "e818a2ac84msh1b7e3db0c06c590p17c8a1jsna91177a65c0e",
     },
   };
-  const fetchCoinById = async (uuid) => {
+  const fetchCoinById = async (coinId) => {
     const response = await axios
-      .get(`https://coinranking1.p.rapidapi.com/coin/${uuid}`, optionsForById)
+      .get(`https://coinranking1.p.rapidapi.com/coin/${coinId}`, optionsForById)
       .catch((err) => {
         console.log(err);
       });
@@ -57,7 +57,7 @@ const PortfolioCards = ({ coin, updatebtn }) => {
     updatebtn(response.data.data.coin);
   };
   useEffect(() => {
-    fetchCoinById(coin.id);
+    fetchCoinById(coin.coinId);
   }, []);
   let style = useStyle(valueNow);
   return (
@@ -65,8 +65,8 @@ const PortfolioCards = ({ coin, updatebtn }) => {
       <Card className={style.mobileDisplay}>
         <CardContent className={style.card_style}>
           <Avatar src={coin.iconUrl}></Avatar>
-          <span>{coin.coinName}</span>
-          <span>Coins you have:{coin.AmountOfCoins}</span>
+          <span>{coin.tokenName}</span>
+          <span>Coins you have:{coin.amountOfCoins}</span>
         </CardContent>
         <hr />
         <CardContent className={style.card_style}>

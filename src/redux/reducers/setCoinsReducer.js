@@ -3,7 +3,7 @@ const coins = {
   Topgainer: [],
   Toplosser: [],
   TopTen: [],
-  Wallet: 100000,
+  Wallet: 0,
 };
 export const setCoins = (state = coins, action) => {
   switch (action.type) {
@@ -19,6 +19,8 @@ export const setCoins = (state = coins, action) => {
       return { ...state, Wallet: state.Wallet - action.payload };
     case "SELL":
       return { ...state, Wallet: state.Wallet + action.payload };
+    case "SETBAL":
+      return { ...state, Wallet: action.payload };
     default:
       return state;
   }

@@ -18,6 +18,7 @@ let useStyles = makeStyles((theme) => ({
   },
 }));
 const TopCoins = ({ coinlist, title }) => {
+  console.log(coinlist);
   let style = useStyles();
   return (
     <div style={{ marginBottom: "20px" }}>

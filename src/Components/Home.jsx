@@ -5,8 +5,15 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TopGainer, TopLosser, Topten } from "../redux/actions/CoinActions";
+import {
+  SETBAL,
+  SETCOINS,
+  TopGainer,
+  TopLosser,
+  Topten,
+} from "../redux/actions/CoinActions";
 import TopCoins from "./TopCoins";
+
 let useStyles = makeStyles((theme) => ({
   container_styling: {
     margin: "10px",
@@ -21,7 +28,6 @@ const Home = () => {
   const Topgainer = useSelector((state) => state.Coins.Topgainer);
   const Toplosser = useSelector((state) => state.Coins.Toplosser);
   const TopTen = useSelector((state) => state.Coins.TopTen);
-
   const style = useStyles();
   const [Name, setName] = useState("");
   let optionsAsc = {
@@ -75,6 +81,7 @@ const Home = () => {
       .catch((err) => {
         console.log(err);
       });
+
     dispatch(TopGainer(response.data.data.coins));
   };
   const fetchTopLOSS = async () => {
@@ -102,11 +109,35 @@ const Home = () => {
       setName(localStorage.getItem("Name"));
     }
   };
+  const fetchData = async () => {
+    let authToken = localStorage.getItem("authToken");
+    let coins = await axios.get(
+      "https://crypto-learn-backend.onrender.com/api/coins/fetchAll",
+      {
+        headers: {
+          authToken,
+        },
+      }
+    );
+    let bal = await axios.get(
+      "https://crypto-learn-backend.onrender.com/api/wallet/getBalance",
+      {
+        headers: {
+          authToken,
+        },
+      }
+    );
+    console.log(coins.data, bal.data);
+    dispatch(SETCOINS(coins.data));
+    dispatch(SETBAL(bal.data));
+  };
+
   useEffect(() => {
     getName();
     fetchTopGAIN();
     fetchTopLOSS();
     fetchTOPTEN();
+    fetchData();
   }, []);
 
   return (

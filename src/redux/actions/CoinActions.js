@@ -31,3 +31,9 @@ export const AfterSell = (coinObj) => {
 export const UpdateSell = (coinObj) => {
   return { type: "UPDATE_SELL", payload: coinObj };
 };
+export const SETCOINS = (coins) => {
+  return { type: "SETCOINS", payload: coins };
+};
+export const SETBAL = (bal) => {
+  return { type: "SETBAL", payload: bal };
+};

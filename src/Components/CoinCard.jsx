@@ -20,7 +20,10 @@ import {
   SellCoin,
   AfterBuy,
   AfterSell,
+  SETCOINS,
+  SETBAL,
 } from "../redux/actions/CoinActions";
+import axios from "axios";
 
 const useStyles = makeStyles({
   button: {
@@ -67,34 +70,73 @@ const CoinCard = ({ coin, noBtn }) => {
   const [amountofCoinSell, setamountofCoinSell] = useState(0);
   const [orderAmountSell, setorderAmountSell] = useState();
   const [err, setErr] = useState(false);
-  const balance = useSelector((state) => state.Coins.Wallet);
+  const balance = useSelector((state) => state.Coins.Wallet.Balance);
   const coins = useSelector((state) => state.allCoins.coins);
-  const handleBuy = () => {
+  console.log(balance);
+  const handleBuy = async () => {
     let orderDetails = {
-      id: coin.uuid,
-      coinName: coin.name,
+      coinId: coin.uuid,
+      tokenName: coin.name,
       iconUrl: coin.iconUrl,
-      AmountOfCoins: parseInt(amountofCoinBuy),
+      amountOfCoins: parseInt(amountofCoinBuy),
       buyingPrice: parseFloat(coin.price),
       orderAmount: parseFloat(orderAmountBuy),
       sellingPrice: 0,
     };
+    let authToken = localStorage.getItem("authToken");
+    let Buy = await axios.post(
+      "https://crypto-learn-backend.onrender.com/api/coins/buyCoin",
+      orderDetails,
+      {
+        headers: {
+          authToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(Buy.data);
+    let updateBal = await axios.put(
+      "https://crypto-learn-backend.onrender.com/api/wallet/updateBalance/buy",
+      { amount: orderAmountBuy },
+      { headers: { authToken } }
+    );
+    console.log(updateBal.data);
+
     dispatch(BuyCoin(orderAmountBuy));
     dispatch(AfterBuy(orderDetails));
-    console.log("Your Order is successfully Executed ");
+    fetchData();
     setorderAmountBuy(0);
     setOpenBuy(false);
   };
-  const handleSell = () => {
+  const handleSell = async () => {
     let orderDetails = {
-      id: coin.uuid,
-      AmountOfCoins: amountofCoinSell,
+      coinId: coin.uuid,
+      amountOfCoins: amountofCoinSell,
       orderAmount: orderAmountSell,
       sellingPrice: coin.price,
     };
+    let authToken = localStorage.getItem("authToken");
+    let Sell = await axios.post(
+      "https://crypto-learn-backend.onrender.com/api/coins/sellCoin",
+      orderDetails,
+      {
+        headers: {
+          authToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let updateBal = await axios.put(
+      "https://crypto-learn-backend.onrender.com/api/wallet/updateBalance/sell",
+      { amount: orderAmountSell },
+      { headers: { authToken } }
+    );
+
+    console.log(Sell.data, updateBal.data);
     dispatch(SellCoin(orderAmountSell));
     dispatch(AfterSell(orderDetails));
-    console.log(orderAmountSell);
+    fetchData();
     setorderAmountSell(0);
     setOpenSell(false);
   };
@@ -118,6 +160,28 @@ const CoinCard = ({ coin, noBtn }) => {
   const handleAmountSell = (e) => {
     setamountofCoinSell(e.target.value);
   };
+  const fetchData = async () => {
+    let authToken = localStorage.getItem("authToken");
+    let coins = await axios.get(
+      "https://crypto-learn-backend.onrender.com/api/coins/fetchAll",
+      {
+        headers: {
+          authToken,
+        },
+      }
+    );
+    let bal = await axios.get(
+      "https://crypto-learn-backend.onrender.com/api/wallet/getBalance",
+      {
+        headers: {
+          authToken,
+        },
+      }
+    );
+    console.log(coins.data, bal.data);
+    dispatch(SETCOINS(coins.data));
+    dispatch(SETBAL(bal.data));
+  };
 
   const fetchCoin = () => {
     if (coins.length === 0) {
@@ -125,7 +189,8 @@ const CoinCard = ({ coin, noBtn }) => {
       setsellcoin({});
     }
     coins.map((token) => {
-      if (token.id === coin.uuid) {
+      console.log(token);
+      if (token.coinId === coin.uuid) {
         setAvaliable(true);
         setsellcoin(token);
       }
@@ -141,7 +206,7 @@ const CoinCard = ({ coin, noBtn }) => {
   }, [amountofCoinSell]);
 
   const check = () => {
-    if (amountofCoinSell <= sellcoin.AmountOfCoins) {
+    if (amountofCoinSell <= sellcoin.amountOfCoins) {
       setErr(false);
     } else {
       setErr(true);
@@ -221,7 +286,7 @@ const CoinCard = ({ coin, noBtn }) => {
           <Card>
             <CardHeader
               avatar={<Avatar src={coin.iconUrl}></Avatar>}
-              title={coin.name}
+              title={coin.tokenName}
               titleTypographyProps={{ fontSize: "22px" }}
             ></CardHeader>
             <hr />
@@ -299,7 +364,7 @@ const CoinCard = ({ coin, noBtn }) => {
             <Card>
               <CardHeader
                 avatar={<Avatar src={coin.iconUrl}></Avatar>}
-                title={coin.name}
+                title={coin.tokenName}
               ></CardHeader>
               <hr />
               <CardContent>
@@ -311,7 +376,7 @@ const CoinCard = ({ coin, noBtn }) => {
                   Sell {coin.name}
                 </Typography>
                 <Typography display={"inline-block"}>
-                  Coin balance:{sellcoin.AmountOfCoins}
+                  Coin balance:{sellcoin.amountOfCoins}
                 </Typography>
                 <TextField
                   className={classes.input}

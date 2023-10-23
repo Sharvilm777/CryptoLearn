@@ -66,6 +66,8 @@ let useStyle = makeStyles((theme) => ({
 const Portfolio = () => {
   let coins = useSelector((state) => state.allCoins.coins);
 
+  // Task 1: I have to set response data from fetchAllApi to redux state allCoins.coins and then we can map through it
+
   const [invested, setInvested] = useState(0);
   const [current, setCurrent] = useState(0);
   let Now = current - invested;
@@ -78,13 +80,24 @@ const Portfolio = () => {
   };
   const getcurrentValue = (value) => {
     for (let i = 0; i < coins.length; i++) {
-      if (value.uuid === coins[i].id) {
-        let total = coins[i].AmountOfCoins * value.price;
+      if (value.uuid === coins[i].coinId) {
+        let total = coins[i].amountOfCoins * value.price;
         setCurrent((prevcurrent) => prevcurrent + total);
       }
     }
   };
+  const fetchCoinsFromDB = async () => {
+    let authToken = localStorage.getItem("authToken");
+    let response = await axios.get(
+      "https://crypto-learn-backend.onrender.com/api/coins/fetchAll",
+      {
+        headers: { authToken },
+      }
+    );
+    console.log(response.data);
+  };
   useEffect(() => {
+    fetchCoinsFromDB();
     getInvestedValue();
   }, []);
   return (

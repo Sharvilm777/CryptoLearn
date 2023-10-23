@@ -53,7 +53,6 @@ const Coin = () => {
       .catch((err) => {
         console.log(err);
       });
-    console.log(response.data);
     setCoin(response.data.data.coin);
   };
   const fetchCoinPriceHistory = async (uuid) => {

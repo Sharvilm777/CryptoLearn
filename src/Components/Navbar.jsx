@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Navbar() {
   const balance = useSelector((state) => state.Coins.Wallet);
+
   let style = useStyles();
   return (
     <>
@@ -90,7 +91,7 @@ function Navbar() {
           </Link>
           <p className={style.balanceStyling}>
             <span>Wallet Balance : </span>
-            {balance.toFixed(3)}
+            {balance.Balance}
           </p>
         </Box>
 
@@ -98,7 +99,7 @@ function Navbar() {
           <Link className={style.button_style} to="/login">
             Login
           </Link>
-          <Link className={style.button_style} to="/login">
+          <Link className={style.button_style} to="/signup">
             sign up
           </Link>
         </Box>
